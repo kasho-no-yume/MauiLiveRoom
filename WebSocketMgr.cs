@@ -13,7 +13,8 @@ namespace MauiApp1
     {
         private static ClientWebSocket _webSocket;
         private static CancellationTokenSource _cancellationTokenSource;
-        private static int TimeOut = 1;
+        private static int TimeOut = 2;
+        public static WebSocketState connState { get { return _webSocket.State; } }
 
         static WebSocketMgr()
         {
@@ -30,7 +31,8 @@ namespace MauiApp1
 
             if (completedTask == responseTask)
             {
-                WebSocketMgr.ReceiveLoop();
+                ReceiveLoop();
+                ListenConnectionStatus();
                 Debug.WriteLine("连接成功！");
                 return true;
             }
@@ -41,7 +43,7 @@ namespace MauiApp1
             }
         }
 
-        public static async Task<string> SendAsync(string message)
+        public static async Task<bool> SendAsync(string message)
         {
             Debug.WriteLine("发送信息："+message);
             try
@@ -60,15 +62,15 @@ namespace MauiApp1
                 if (completedTask == responseTask)
                 {
                     // 异步操作完成
-                    Debug.WriteLine("异步操作完成");
-                    return await ReceiveAsync();
+                    Debug.WriteLine("发送异步操作完成");
+                    return true;
                 }
                 else
                 {
                     // 超时处理逻辑
-                    Debug.WriteLine("异步操作超时");
+                    Debug.WriteLine("发送异步操作超时");
                     // 执行超时后的操作
-                    return "发送超时";
+                    return false;
                 }
 
                 
@@ -76,11 +78,27 @@ namespace MauiApp1
             catch (Exception ex)
             {
                 // Handle exception
-                return ex.Message;
+                Debug.WriteLine(ex.Message);
+                EventBus.networkError(ex);
+                return false;
             }
         }
 
-        private static async Task<string> ReceiveAsync()
+        private static async Task ListenConnectionStatus()
+        {
+            Debug.WriteLine("心跳检测开始");
+            while (_webSocket.State == WebSocketState.Open)
+            {
+                Debug.WriteLine("心跳成功，连接正常。");
+                // 每5秒检查一次连接状态
+                await Task.Delay(TimeSpan.FromSeconds(5));
+               
+            }
+            Debug.WriteLine("服务器断开");
+            App.QuitApp();
+        }
+
+            private static async Task<string> ReceiveAsync()
         {           
             try
             {
@@ -88,7 +106,7 @@ namespace MauiApp1
                 var responseTask = _webSocket.ReceiveAsync(buffer, CancellationToken.None);
                 Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(TimeOut));
 
-                Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;
+                Task completedTask = await Task.WhenAny(responseTask, timeoutTask);
                 if (completedTask == responseTask) 
                 {
                     var result = await responseTask;
@@ -100,30 +118,38 @@ namespace MauiApp1
                 else
                 {
                     // 超时处理逻辑
-                    Debug.WriteLine("异步操作超时");
+                    Debug.WriteLine("接收异步操作超时");
                     return "接收超时";
                 }
             }
             catch (Exception ex)
             {
                 // Handle exception
+                EventBus.networkError(ex);
                 return ex.Message;
             }
         }
 
         private static async Task ReceiveLoop()
         {
+            Debug.WriteLine("循环接收消息开启。");
             var buffer = new byte[40960];
             while (_webSocket.State == WebSocketState.Open)
             {
-                var receiveResult = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cancellationTokenSource.Token);
-                if (receiveResult.MessageType == WebSocketMessageType.Text)
+                WebSocketReceiveResult result = await _webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), _cancellationTokenSource.Token);
+
+                if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    var message = Encoding.UTF8.GetString(buffer, 0, receiveResult.Count);
-                    // 处理收到的消息，可以通过事件或回调函数通知其他部分
-                    Debug.WriteLine("监听收到信息：" + message);
+                    string message = Encoding.UTF8.GetString(buffer, 0, result.Count);
+                    Debug.WriteLine("Received message: " + message);
+                    EventBus.GlobalEventHandler(message);
+                }
+                else if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    await _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "", _cancellationTokenSource.Token);
                 }
             }
+            Debug.WriteLine("循环接收消息结束。");
         }
 
         public static async Task DisconnectWebSocket()
@@ -135,6 +161,7 @@ namespace MauiApp1
             }
             catch (Exception ex)
             {
+                EventBus.networkError(ex);
                 // Handle exception
             }
         }

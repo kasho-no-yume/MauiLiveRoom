@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+namespace MauiApp1
+{
+    internal class EventBus
+    {
+        public delegate void NetworkError(Exception e);
+        public static NetworkError networkError;
+        public delegate void UpdateList(List<LiveInfo> list);
+        public static UpdateList updateList;
+        public delegate void EnterRoom(string path);
+        public static EnterRoom enterRoom;
+        public delegate void QuitRoom(string path);
+        public static QuitRoom quitRoom;
+        public delegate void UpdateNums(int nums);
+        public static UpdateNums updateNums;
+        public delegate void UpdateComments(List<string> comments);
+        public static UpdateComments updateComments;
+       
+        static EventBus()
+        {
+            networkError += defaultError;
+            updateList += defaultUpdateList;
+            enterRoom += defaultEnterRoom;
+            quitRoom += defaultQuitRoom;
+            updateNums += defaultUpdateNums;
+            updateComments += defaultUpdateComments;
+        }
+        public static void GlobalEventHandler(string json)
+        {
+            try
+            {
+                JObject jobj = JObject.Parse(json);
+                string cmd = jobj["msg"].ToString();
+                Debug.WriteLine("receive msg:"+cmd);
+                switch (cmd)
+                {
+                    case "updateList":
+                        updateList(JsonConvert.DeserializeObject<List<LiveInfo>>(jobj["data"].ToString()));
+                        break;
+                }
+            }
+            catch(Exception e) 
+            {
+                networkError(e);
+            }
+        }
+        private static void defaultError(Exception e)
+        {
+            Debug.WriteLine("EventBusError:"+e.Message);
+        }
+        private static void defaultUpdateList(List<LiveInfo> list)
+        {
+            Debug.WriteLine("EventBusUpdateList:" + list.Count);
+        }
+        private static void defaultEnterRoom(string path)
+        {
+            Debug.WriteLine("EventBusEnter:" + path);
+        }
+        private static void defaultQuitRoom(string path)
+        {
+            Debug.WriteLine("EventBusQuit:" + path);
+        }
+        private static void defaultUpdateNums(int nums)
+        {
+            Debug.WriteLine("EventBusUpdateNums:" + nums);
+        }
+        private static void defaultUpdateComments(List<string> comments)
+        {
+            Debug.WriteLine("EventBusUpdateComments:" + comments);
+        }
+
+    }
+}

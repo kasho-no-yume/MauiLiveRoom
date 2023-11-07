@@ -3,12 +3,34 @@
     x:Class="MauiApp1.ListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="page"
     Title="ListPage">
-    <ListView ItemsSource="{Binding lives}" ItemTapped="ListView_ItemTapped">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <TextCell Detail="{Binding Watching}" Text="{Binding Path}" />
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
+    <VerticalStackLayout>
+        <Border
+            Padding="16,8"
+            Background="#2B0B98"
+            HorizontalOptions="Center"
+            Stroke="#C49B33"
+            StrokeThickness="4">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="40,0,0,40" />
+            </Border.StrokeShape>
+            <Label
+                FontAttributes="Bold"
+                FontSize="18"
+                Text=" 看看今天有什么直播吧"
+                TextColor="White" />
+        </Border>
+        <ListView
+            x:Name="liveList"
+            BackgroundColor="LightSkyBlue"
+            ItemTapped="ListView_ItemTapped"
+            SeparatorColor="Black">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextCell Detail="{Binding watching}" Text="{Binding path}" />
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </VerticalStackLayout>
 </ContentPage>

@@ -8,13 +8,17 @@ namespace MauiApp1
 {
     public class LiveInfo
     {
-        public LiveInfo() { }
+        public LiveInfo() 
+        {
+            this.path = "xydltql";
+            this.watching = 5;
+        }
         public LiveInfo(string path,int watching) 
         { 
-            this.Path = path;
-            this.Watching = watching;
+            this.path = path;
+            this.watching = watching;
         }   
-        public string Path { get; set; }
-        public int Watching { get ; set; }
+        public string path { get; set; }
+        public int watching { get ; set; }
     }
 }
