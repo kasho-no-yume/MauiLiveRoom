@@ -1,4 +1,3 @@
-using Newtonsoft.Json;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -6,8 +5,8 @@ namespace MauiApp1;
 
 public partial class ListPage : ContentPage
 {
-	private List<LiveInfo> liveInfos = new List<LiveInfo>();
-	public List<LiveInfo> Lives 
+	private ObservableCollection<LiveInfo> liveInfos = new ObservableCollection<LiveInfo>();
+	public ObservableCollection<LiveInfo> Lives 
 	{ 
 		get => liveInfos; 
 		set 
@@ -19,22 +18,36 @@ public partial class ListPage : ContentPage
             }
         } 
 	}
-	public ListPage()
+	public ListPage(string auth)
 	{
-        EventBus.updateList += UpdateList;
         InitializeComponent();
-        liveList.ItemsSource = Lives;       
-        MsgSender.SendAuth("xydltql");
+        liveList.ItemsSource = Lives;
+        EventBus.updateList += UpdateList;                 
+        MsgSender.SendAuth(auth);
+        page.Title = auth+"大佬好，看看今天有什么直播吧";
+    }
+    ~ListPage()
+    {
+        EventBus.updateList -= UpdateList;
     }
     private void UpdateList(List<LiveInfo> lst)
     {
-        liveInfos = lst;
+        liveInfos.Clear();
+        foreach (LiveInfo info in lst)
+        {
+            liveInfos.Add(info);
+        }
     }
 
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {     
         var s = (e.Item as LiveInfo).path;
         Debug.WriteLine(s);
-        MsgSender.SendEnter(s);
+        //App.ChangePage(new MainPage(s));
+        await Navigation.PushAsync(new MainPage(s));
+    }
+    private void Refresh_list(object sender, EventArgs e) 
+    {
+        MsgSender.SendRefresh();
     }
 }

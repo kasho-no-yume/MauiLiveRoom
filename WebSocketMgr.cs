@@ -22,6 +22,13 @@ namespace MauiApp1
 
         public static bool Connect()
         {
+            if(_webSocket != null)
+            {
+                if(_webSocket.State == WebSocketState.Open)
+                {
+                    return true;
+                }
+            }
             _webSocket = new ClientWebSocket();
             _cancellationTokenSource = new CancellationTokenSource();
             var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
@@ -89,7 +96,7 @@ namespace MauiApp1
             Debug.WriteLine("心跳检测开始");
             while (_webSocket.State == WebSocketState.Open)
             {
-                Debug.WriteLine("心跳成功，连接正常。");
+                //Debug.WriteLine("心跳成功，连接正常。");
                 // 每5秒检查一次连接状态
                 await Task.Delay(TimeSpan.FromSeconds(5));
                
@@ -98,7 +105,7 @@ namespace MauiApp1
             App.QuitApp();
         }
 
-            private static async Task<string> ReceiveAsync()
+        private static async Task<string> ReceiveAsync()
         {           
             try
             {

@@ -17,7 +17,7 @@ namespace MauiApp1
         {
             if (WebSocketMgr.Connect())
             {
-                var res = WebSocketMgr.SendAsync("\""+content+"\"").Result;
+                var res = WebSocketMgr.SendAsync(content).Result;
                 if (res == false)
                 {
                     App.QuitApp();

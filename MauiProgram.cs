@@ -7,8 +7,7 @@ public static class MauiProgram
 {
 	public static MauiApp CreateMauiApp()
 	{
-		var builder = MauiApp.CreateBuilder();
-		builder.UseMauiApp<App>().UseMauiCommunityToolkitMediaElement();
+		var builder = MauiApp.CreateBuilder().UseMauiApp<App>().UseMauiCommunityToolkitMediaElement();
 
 #if DEBUG
         builder.Logging.AddDebug();

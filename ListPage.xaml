@@ -4,9 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="page"
-    Title="ListPage">
+    Title="看看今天有什么直播吧">
     <VerticalStackLayout>
-        <Border
+        <!--<Border
             Padding="16,8"
             Background="#2B0B98"
             HorizontalOptions="Center"
@@ -20,7 +20,8 @@
                 FontSize="18"
                 Text=" 看看今天有什么直播吧"
                 TextColor="White" />
-        </Border>
+        </Border>-->
+        <Button Clicked="Refresh_list" Text="刷新一下" />
         <ListView
             x:Name="liveList"
             BackgroundColor="LightSkyBlue"
@@ -28,7 +29,7 @@
             SeparatorColor="Black">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Detail="{Binding watching}" Text="{Binding path}" />
+                    <TextCell Detail="{Binding watching, StringFormat='当前观看人数:{0}'}" Text="{Binding path}" />
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

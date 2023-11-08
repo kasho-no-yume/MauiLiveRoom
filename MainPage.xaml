@@ -3,14 +3,16 @@
     x:Class="MauiApp1.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    x:Name="page">
 
     <AbsoluteLayout>
         <toolkit:MediaElement
+            x:Name="media"
             AbsoluteLayout.LayoutBounds="0,0,0.8,1"
             AbsoluteLayout.LayoutFlags="All"
             ShouldAutoPlay="True"
-            ShouldShowPlaybackControls="false"
+            ShouldShowPlaybackControls="False"
             Source="http://mc.jsm.asia:8899/bstql/index.m3u8"
             VerticalOptions="FillAndExpand" />
 
@@ -18,8 +20,22 @@
             AbsoluteLayout.LayoutBounds="1,0,0.2,1"
             AbsoluteLayout.LayoutFlags="All"
             Orientation="Vertical">
+            <Label x:Name="watching" />
+            <Label x:Name="enterquit" />
             <ScrollView VerticalOptions="FillAndExpand">
-                <StackLayout x:Name="chatStackLayout" />
+                <ListView x:Name="commentList" SeparatorColor="Black">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <ViewCell>
+                                <Label
+                                    Padding="10"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    Text="{Binding}" />
+                            </ViewCell>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </ScrollView>
             <Entry
                 x:Name="messageEntry"

@@ -15,9 +15,9 @@ namespace MauiApp1
         public static NetworkError networkError;
         public delegate void UpdateList(List<LiveInfo> list);
         public static UpdateList updateList;
-        public delegate void EnterRoom(string path);
+        public delegate void EnterRoom(string username);
         public static EnterRoom enterRoom;
-        public delegate void QuitRoom(string path);
+        public delegate void QuitRoom(string username);
         public static QuitRoom quitRoom;
         public delegate void UpdateNums(int nums);
         public static UpdateNums updateNums;
@@ -45,6 +45,18 @@ namespace MauiApp1
                     case "updateList":
                         updateList(JsonConvert.DeserializeObject<List<LiveInfo>>(jobj["data"].ToString()));
                         break;
+                    case "comments":
+                        updateComments(JsonConvert.DeserializeObject<List<string>>(jobj["comments"].ToString()));
+                        break;
+                    case "enter":
+                        enterRoom(jobj["username"].ToString());
+                        break;
+                    case "quit":
+                        quitRoom(jobj["username"].ToString());
+                        break;
+                    case "updateNums":
+                        updateNums(int.Parse(jobj["nums"].ToString()));
+                        break;
                 }
             }
             catch(Exception e) 
@@ -60,13 +72,13 @@ namespace MauiApp1
         {
             Debug.WriteLine("EventBusUpdateList:" + list.Count);
         }
-        private static void defaultEnterRoom(string path)
+        private static void defaultEnterRoom(string username)
         {
-            Debug.WriteLine("EventBusEnter:" + path);
+            Debug.WriteLine("EventBusEnter:" + username);
         }
-        private static void defaultQuitRoom(string path)
+        private static void defaultQuitRoom(string username)
         {
-            Debug.WriteLine("EventBusQuit:" + path);
+            Debug.WriteLine("EventBusQuit:" + username);
         }
         private static void defaultUpdateNums(int nums)
         {
