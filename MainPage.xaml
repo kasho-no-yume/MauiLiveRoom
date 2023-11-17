@@ -23,14 +23,17 @@
             <Label x:Name="watching" />
             <Label x:Name="enterquit" />
             <ScrollView VerticalOptions="FillAndExpand">
-                <ListView x:Name="commentList" SeparatorColor="Black">
+                <ListView
+                    x:Name="commentList"
+                    HasUnevenRows="True"
+                    SeparatorColor="Black">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
                                 <Label
                                     Padding="10"
-                                    FontAttributes="Bold"
                                     FontSize="18"
+                                    LineBreakMode="WordWrap"
                                     Text="{Binding}" />
                             </ViewCell>
                         </DataTemplate>
