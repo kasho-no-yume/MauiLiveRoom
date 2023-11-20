@@ -7,13 +7,18 @@
     x:Name="page">
 
     <AbsoluteLayout>
-        <toolkit:MediaElement
+        <!--<toolkit:MediaElement
             x:Name="media"
             AbsoluteLayout.LayoutBounds="0,0,0.8,1"
             AbsoluteLayout.LayoutFlags="All"
             ShouldAutoPlay="True"
             ShouldShowPlaybackControls="False"
             Source="http://mc.jsm.asia:8899/bstql/index.m3u8"
+            VerticalOptions="FillAndExpand" />-->
+        <WebView
+            x:Name="web"
+            AbsoluteLayout.LayoutBounds="0,0,0.8,1"
+            AbsoluteLayout.LayoutFlags="All"
             VerticalOptions="FillAndExpand" />
 
         <StackLayout

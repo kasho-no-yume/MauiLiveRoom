@@ -27,8 +27,9 @@ public partial class MainPage : ContentPage
 		EventBus.quitRoom += SomebodyQuit;
 		EventBus.enterRoom += SomebodyEnter;
 		EventBus.updateNums += UpdateNums;
-		media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
-		MsgSender.SendEnter(path);
+		//media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
+		web.Source = "http://mc.jsm.asia:8899/" + path;
+        MsgSender.SendEnter(path);
 		page.Title = "当前正在观看的直播是：" + path;
 
     }
