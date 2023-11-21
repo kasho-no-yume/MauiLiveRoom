@@ -4,7 +4,9 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    x:Name="page">
+    x:Name="page"
+    NavigationPage.HasNavigationBar="{OnPlatform WinUI=True,
+                                                 Android=False}">
 
     <AbsoluteLayout>
         <!--<toolkit:MediaElement
@@ -37,7 +39,8 @@
                             <ViewCell>
                                 <Label
                                     Padding="10"
-                                    FontSize="18"
+                                    FontSize="{OnPlatform WinUI=18,
+                                                          Android=8}"
                                     LineBreakMode="WordWrap"
                                     Text="{Binding}" />
                             </ViewCell>
@@ -45,7 +48,7 @@
                     </ListView.ItemTemplate>
                 </ListView>
             </ScrollView>
-            <Entry
+            <Editor
                 x:Name="messageEntry"
                 HeightRequest="100"
                 Placeholder="输入消息" />

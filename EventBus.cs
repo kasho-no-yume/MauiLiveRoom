@@ -11,8 +11,8 @@ namespace MauiApp1
 {
     internal class EventBus
     {
-        public delegate void NetworkError(Exception e);
-        public static NetworkError networkError;
+        public delegate void RuntimeError(Exception e);
+        public static RuntimeError codeError;
         public delegate void UpdateList(List<LiveInfo> list);
         public static UpdateList updateList;
         public delegate void EnterRoom(string username);
@@ -23,15 +23,21 @@ namespace MauiApp1
         public static UpdateNums updateNums;
         public delegate void UpdateComments(List<string> comments);
         public static UpdateComments updateComments;
+        public delegate void Disconnect();
+        public static Disconnect disconnect;
+        public delegate void Reconnect();
+        public static Reconnect reconnect;
        
         static EventBus()
         {
-            networkError += defaultError;
+            codeError += defaultError;
             updateList += defaultUpdateList;
             enterRoom += defaultEnterRoom;
             quitRoom += defaultQuitRoom;
             updateNums += defaultUpdateNums;
             updateComments += defaultUpdateComments;
+            disconnect += defaultDisconnect;
+            reconnect += defaultReconnect;
         }
         public static void GlobalEventHandler(string json)
         {
@@ -61,7 +67,7 @@ namespace MauiApp1
             }
             catch(Exception e) 
             {
-                networkError(e);
+                codeError(e);
             }
         }
         private static void defaultError(Exception e)
@@ -87,6 +93,14 @@ namespace MauiApp1
         private static void defaultUpdateComments(List<string> comments)
         {
             Debug.WriteLine("EventBusUpdateComments:" + comments);
+        }
+        private static void defaultDisconnect()
+        {
+            Debug.WriteLine("EventBusDisconnected!!");
+        }
+        private static void defaultReconnect()
+        {
+            Debug.WriteLine("EventBusReconnected!!");
         }
 
     }

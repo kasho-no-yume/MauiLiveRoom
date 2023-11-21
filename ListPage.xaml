@@ -6,21 +6,6 @@
     x:Name="page"
     Title="看看今天有什么直播吧">
     <VerticalStackLayout>
-        <!--<Border
-            Padding="16,8"
-            Background="#2B0B98"
-            HorizontalOptions="Center"
-            Stroke="#C49B33"
-            StrokeThickness="4">
-            <Border.StrokeShape>
-                <RoundRectangle CornerRadius="40,0,0,40" />
-            </Border.StrokeShape>
-            <Label
-                FontAttributes="Bold"
-                FontSize="18"
-                Text=" 看看今天有什么直播吧"
-                TextColor="White" />
-        </Border>-->
         <Button Clicked="Refresh_list" Text="刷新一下" />
         <ListView
             x:Name="liveList"

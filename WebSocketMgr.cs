@@ -29,7 +29,10 @@ namespace MauiApp1
                     return true;
                 }
             }
-            _webSocket = new ClientWebSocket();
+            else
+            {
+                _webSocket = new ClientWebSocket();
+            }           
             _cancellationTokenSource = new CancellationTokenSource();
             var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
             Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(TimeOut));
@@ -40,7 +43,7 @@ namespace MauiApp1
             {
                 ReceiveLoop();
                 ListenConnectionStatus();
-                Debug.WriteLine("连接成功！");
+                Debug.WriteLine("连接成功！");               
                 return true;
             }
             else
@@ -86,7 +89,7 @@ namespace MauiApp1
             {
                 // Handle exception
                 Debug.WriteLine(ex.Message);
-                EventBus.networkError(ex);
+                EventBus.codeError(ex);
                 return false;
             }
         }
@@ -98,11 +101,19 @@ namespace MauiApp1
             {
                 //Debug.WriteLine("心跳成功，连接正常。");
                 // 每5秒检查一次连接状态
-                await Task.Delay(TimeSpan.FromSeconds(5));
+                await Task.Delay(TimeSpan.FromSeconds(2));
                
             }
             Debug.WriteLine("服务器断开");
-            App.QuitApp();
+            EventBus.disconnect();
+            var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
+            responseTask.Wait();
+            if(connState == WebSocketState.Open)
+            {
+                MsgSender.SendAuth(UserData.username);
+                EventBus.reconnect();
+                await ListenConnectionStatus();
+            }
         }
 
         private static async Task<string> ReceiveAsync()
@@ -132,7 +143,7 @@ namespace MauiApp1
             catch (Exception ex)
             {
                 // Handle exception
-                EventBus.networkError(ex);
+                EventBus.codeError(ex);
                 return ex.Message;
             }
         }
@@ -168,7 +179,7 @@ namespace MauiApp1
             }
             catch (Exception ex)
             {
-                EventBus.networkError(ex);
+                EventBus.codeError(ex);
                 // Handle exception
             }
         }

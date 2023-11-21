@@ -1,4 +1,8 @@
-﻿using System.Collections.ObjectModel;
+﻿using CommunityToolkit.Maui.Views;
+using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Maui.Layouts;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace MauiApp1;
 
@@ -27,6 +31,7 @@ public partial class MainPage : ContentPage
 		EventBus.quitRoom += SomebodyQuit;
 		EventBus.enterRoom += SomebodyEnter;
 		EventBus.updateNums += UpdateNums;
+		EventBus.disconnect += Disconnect;
 		//media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
 		web.Source = "http://mc.jsm.asia:8899/" + path;
         MsgSender.SendEnter(path);
@@ -38,6 +43,8 @@ public partial class MainPage : ContentPage
         EventBus.updateComments -= UpdateComments;
         EventBus.quitRoom -= SomebodyQuit;
         EventBus.enterRoom -= SomebodyEnter;
+		EventBus.updateNums -= UpdateNums;
+		EventBus.disconnect -= Disconnect;
         MsgSender.SendQuit(this.path);
     }
     protected override bool OnBackButtonPressed()
@@ -45,6 +52,8 @@ public partial class MainPage : ContentPage
         EventBus.updateComments -= UpdateComments;
         EventBus.quitRoom -= SomebodyQuit;
         EventBus.enterRoom -= SomebodyEnter;
+		EventBus.updateNums -= UpdateNums;
+		EventBus.disconnect -= Disconnect;
         MsgSender.SendQuit(this.path);
         return base.OnBackButtonPressed();
     }
@@ -64,17 +73,38 @@ public partial class MainPage : ContentPage
     private void UpdateComments(List<string> comments)
 	{
 		commentsList.Clear();
+		if(comments.Count == 0)
+		{
+			return;
+		}
 		foreach (var comment in comments)
 		{
-			commentsList.Add(comment);
+            commentsList.Add(comment);
 		}
-	}
+        commentList.ScrollTo(commentsList[commentsList.Count - 1], ScrollToPosition.End, true);
+    }
 
-	public async void SendMessage_Clicked(object sender,EventArgs args)
+	public void SendMessage_Clicked(object sender,EventArgs args)
 	{
 		var s=messageEntry.Text;
+		if(s==null)
+		{
+			s = "";
+		}
 		MsgSender.SendSay(s);
 		messageEntry.Text = "";
-	}
+    }
+	private void Disconnect()
+	{
+        try
+        {
+            var pop = new ReconnectingPage();
+            this.ShowPopup(pop);
+        }
+        catch (Exception ex)
+        {
+            EventBus.codeError(ex);
+        }
+    }
 }
 

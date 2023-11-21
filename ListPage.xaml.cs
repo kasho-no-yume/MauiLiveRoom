@@ -1,5 +1,7 @@
+using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using static MauiApp1.EventBus;
 
 namespace MauiApp1;
 
@@ -22,13 +24,16 @@ public partial class ListPage : ContentPage
 	{
         InitializeComponent();
         liveList.ItemsSource = Lives;
-        EventBus.updateList += UpdateList;                 
+        EventBus.updateList += UpdateList;
+        EventBus.disconnect += Disconnect;
         MsgSender.SendAuth(auth);
+        UserData.username = auth;
         page.Title = auth+"大佬好，看看今天有什么直播吧";
     }
     ~ListPage()
     {
         EventBus.updateList -= UpdateList;
+        EventBus.disconnect -= Disconnect;
     }
     private void UpdateList(List<LiveInfo> lst)
     {
@@ -49,5 +54,17 @@ public partial class ListPage : ContentPage
     private void Refresh_list(object sender, EventArgs e) 
     {
         MsgSender.SendRefresh();
+    }
+    private void Disconnect()
+    {
+        try
+        {
+            var pop = new ReconnectingPage();
+            this.ShowPopup(pop);
+        }
+        catch (Exception ex)
+        {
+            EventBus.codeError(ex);
+        }
     }
 }
