@@ -20,6 +20,11 @@ namespace MauiApp1
         {
         }
 
+        public static ClientWebSocket getIns()
+        {
+            return _webSocket;
+        }
+
         public static bool Connect()
         {
             if(_webSocket != null)
@@ -106,13 +111,28 @@ namespace MauiApp1
             }
             Debug.WriteLine("服务器断开");
             EventBus.disconnect();
+            _webSocket = new ClientWebSocket();
             var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
-            responseTask.Wait();
-            if(connState == WebSocketState.Open)
+            Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(30));
+
+            Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;
+            if (completedTask == responseTask)
             {
-                MsgSender.SendAuth(UserData.username);
                 EventBus.reconnect();
+                ReceiveLoop();
+                Debug.WriteLine("重连成功！");
+                MsgSender.SendAuth(UserData.username);
+                if (UserData.currentWatch != null)
+                {
+                    MsgSender.SendEnter(UserData.currentWatch);
+                }
                 await ListenConnectionStatus();
+            }
+            else
+            {
+                Debug.WriteLine("重新连接失败。");
+                App.ChangePage(new AuthPage());
+                return;
             }
         }
 

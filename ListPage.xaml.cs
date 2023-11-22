@@ -48,6 +48,7 @@ public partial class ListPage : ContentPage
     {     
         var s = (e.Item as LiveInfo).path;
         Debug.WriteLine(s);
+        UserData.currentWatch = s;
         //App.ChangePage(new MainPage(s));
         await Navigation.PushAsync(new MainPage(s));
     }

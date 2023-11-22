@@ -17,7 +17,7 @@
 		<ApplicationTitle>看直播姬</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.mauiapp1</ApplicationId>
+		<ApplicationId>com.bitsson.watchlivehime</ApplicationId>
 		<ApplicationIdGuid>042267ad-f67e-464d-a220-14ba8e1061d1</ApplicationIdGuid>
 
 		<!-- Versions -->

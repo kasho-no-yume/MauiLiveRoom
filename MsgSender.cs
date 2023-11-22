@@ -13,7 +13,7 @@ namespace MauiApp1
         {
 
         }
-        private static void Send(string content)
+        public static void Send(string content)
         {
             if (WebSocketMgr.Connect())
             {

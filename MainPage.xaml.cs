@@ -55,6 +55,7 @@ public partial class MainPage : ContentPage
 		EventBus.updateNums -= UpdateNums;
 		EventBus.disconnect -= Disconnect;
         MsgSender.SendQuit(this.path);
+		UserData.currentWatch = null;
         return base.OnBackButtonPressed();
     }
 
@@ -90,9 +91,20 @@ public partial class MainPage : ContentPage
 		if(s==null)
 		{
 			s = "";
+			return;
 		}
-		MsgSender.SendSay(s);
+        if (s.Trim().Length==0)
+        {
+            messageEntry.Text = "";
+            return;
+        }     
 		messageEntry.Text = "";
+		if(s=="command disconnect")
+		{
+			WebSocketMgr.getIns().Abort();
+			return;
+		}
+        MsgSender.SendSay(s);
     }
 	private void Disconnect()
 	{

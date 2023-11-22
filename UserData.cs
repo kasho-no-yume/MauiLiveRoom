@@ -9,5 +9,7 @@ namespace MauiApp1
     internal class UserData
     {
         public static string username;
+        public static string password;
+        public static string currentWatch;
     }
 }
