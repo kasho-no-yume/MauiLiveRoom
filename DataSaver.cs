@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CommunityToolkit.Maui.Alerts;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -18,16 +19,13 @@ namespace MauiApp1
             {
                 if (!File.Exists(mainDir + "/" + filePath))
                 {
-                    File.Create(mainDir + "/" + filePath);
+                    var fs = File.Create(mainDir + "/" + filePath);
                     Debug.WriteLine(mainDir + "/" + filePath);
+                    fs.Close();
                 }
                 var file = mainDir + "\\" + filePath;
-                using Stream fileStream = File.OpenRead(file);
-                using StreamReader reader = new StreamReader(fileStream);
-                string res = reader.ReadToEnd();
-                reader.Close();
-                fileStream.Close();
-                return res;
+                var s = File.ReadAllText(file);
+                return s;
             }
             catch (Exception ex)
             {
@@ -37,11 +35,14 @@ namespace MauiApp1
         }
         public static void WriteTextFile(string file,string content)
         {
-            using Stream fileStream = File.OpenWrite(mainDir + "/" + file);
-            using StreamWriter writer = new StreamWriter(fileStream);
-            writer.Write(content);
-            writer.Close();
-            fileStream.Close();
+            try
+            {
+                File.WriteAllText(mainDir + "\\" + file, content);
+            }
+            catch (Exception ex)
+            {
+                EventBus.codeError(ex);
+            }
         }
     }
 }
