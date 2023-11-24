@@ -9,6 +9,12 @@
             x:Name="PasswordEntry"
             IsPassword="True"
             Placeholder="暂时不用输入这个，我也不想删就这样了" />
+        <!--<HorizontalStackLayout>
+            <Label Text="记住用户" />
+            <CheckBox x:Name="rememberUsername" />
+            <Label Text="记住密码" />
+            <CheckBox x:Name="rememberPassword" />
+        </HorizontalStackLayout>-->
         <Button Clicked="OnLoginClicked" Text="Login" />
     </StackLayout>
 </ContentPage>

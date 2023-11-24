@@ -20,7 +20,7 @@ namespace MauiApp1
                 var res = WebSocketMgr.SendAsync(content).Result;
                 if (res == false)
                 {
-                    App.QuitApp();
+                    App.ChangePage(new AuthPage());
                     return;
                 }
                 else

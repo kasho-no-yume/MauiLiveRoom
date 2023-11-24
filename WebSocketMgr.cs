@@ -116,7 +116,7 @@ namespace MauiApp1
             Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(30));
 
             Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;
-            if (completedTask == responseTask)
+            if (completedTask == responseTask && _webSocket.State == WebSocketState.Open)
             {
                 EventBus.reconnect();
                 ReceiveLoop();
@@ -130,7 +130,7 @@ namespace MauiApp1
             }
             else
             {
-                Debug.WriteLine("重新连接失败。");
+                Debug.WriteLine("重新连接失败。请重新登陆");
                 App.ChangePage(new AuthPage());
                 return;
             }

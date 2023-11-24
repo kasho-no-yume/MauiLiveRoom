@@ -3,25 +3,26 @@
     x:Class="MauiApp1.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:custom="clr-namespace:MauiApp1"
     xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
     x:Name="page"
     NavigationPage.HasNavigationBar="{OnPlatform WinUI=True,
                                                  Android=False}">
 
     <AbsoluteLayout>
-        <!--<toolkit:MediaElement
+        <toolkit:MediaElement
             x:Name="media"
             AbsoluteLayout.LayoutBounds="0,0,0.8,1"
             AbsoluteLayout.LayoutFlags="All"
             ShouldAutoPlay="True"
-            ShouldShowPlaybackControls="False"
+            ShouldShowPlaybackControls="True"
             Source="http://mc.jsm.asia:8899/bstql/index.m3u8"
-            VerticalOptions="FillAndExpand" />-->
-        <WebView
+            VerticalOptions="FillAndExpand" />
+        <!--<WebView
             x:Name="web"
             AbsoluteLayout.LayoutBounds="0,0,0.8,1"
             AbsoluteLayout.LayoutFlags="All"
-            VerticalOptions="FillAndExpand" />
+            VerticalOptions="FillAndExpand" />-->
 
         <StackLayout
             AbsoluteLayout.LayoutBounds="1,0,0.2,1"
@@ -30,7 +31,7 @@
             <Label x:Name="watching" />
             <Label x:Name="enterquit" />
             <ScrollView VerticalOptions="FillAndExpand">
-                <ListView
+                <custom:AutoScrollListView
                     x:Name="commentList"
                     HasUnevenRows="True"
                     SeparatorColor="Black">
@@ -46,16 +47,27 @@
                             </ViewCell>
                         </DataTemplate>
                     </ListView.ItemTemplate>
-                </ListView>
+                </custom:AutoScrollListView>
             </ScrollView>
             <Editor
                 x:Name="messageEntry"
-                HeightRequest="100"
+                HeightRequest="{OnPlatform WinUI=100,
+                                           Android=80}"
                 Placeholder="输入消息" />
-            <Button
-                Clicked="SendMessage_Clicked"
-                HeightRequest="20"
-                Text="发送" />
+            <HorizontalStackLayout HeightRequest="{OnPlatform WinUI=30, Android=40}">
+                <Button
+                    Clicked="RefreshSource"
+                    HeightRequest="{OnPlatform WinUI=30,
+                                               Android=40}"
+                    HorizontalOptions="FillAndExpand"
+                    Text="刷新" />
+                <Button
+                    Clicked="SendMessage_Clicked"
+                    HeightRequest="{OnPlatform WinUI=30,
+                                               Android=40}"
+                    HorizontalOptions="End"
+                    Text="发送" />
+            </HorizontalStackLayout>
         </StackLayout>
     </AbsoluteLayout>
 

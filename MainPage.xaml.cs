@@ -32,8 +32,8 @@ public partial class MainPage : ContentPage
 		EventBus.enterRoom += SomebodyEnter;
 		EventBus.updateNums += UpdateNums;
 		EventBus.disconnect += Disconnect;
-		//media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
-		web.Source = "http://mc.jsm.asia:8899/" + path;
+		media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
+		//web.Source = "http://mc.jsm.asia:8899/" + path;
         MsgSender.SendEnter(path);
 		page.Title = "当前正在观看的直播是：" + path;
 
@@ -71,18 +71,22 @@ public partial class MainPage : ContentPage
     {
         enterquit.Text = user + "退出了直播间";
     }
-    private void UpdateComments(List<string> comments)
+    private async void UpdateComments(List<string> comments)
 	{
 		commentsList.Clear();
 		if(comments.Count == 0)
 		{
 			return;
 		}
-		foreach (var comment in comments)
+		/*foreach (var comment in comments)
 		{
             commentsList.Add(comment);
+		}*/
+		for(var i = comments.Count - 1; i >= 0; i--)
+		{
+			commentsList.Add(comments[i]);
 		}
-        commentList.ScrollTo(commentsList[commentsList.Count - 1], ScrollToPosition.End, true);
+		//commentList.ScrollTo(commentsList[10], ScrollToPosition.Center, false);  
     }
 
 	public void SendMessage_Clicked(object sender,EventArgs args)
@@ -117,6 +121,12 @@ public partial class MainPage : ContentPage
         {
             EventBus.codeError(ex);
         }
+    }
+
+    private void RefreshSource(object sender, EventArgs e)
+    {
+        media.Source = "http://mc.jsm.asia:8899/" + this.path + "/index.m3u8";
+		media.Play();
     }
 }
 

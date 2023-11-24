@@ -1,6 +1,7 @@
 ﻿using Android.App;
 using Android.Content.PM;
 using Android.OS;
+using Android.Views;
 using System.Runtime.CompilerServices;
 
 namespace MauiApp1;
@@ -12,5 +13,13 @@ public class MainActivity : MauiAppCompatActivity
     public MainActivity()
     {
         Instance = this;
+    }
+
+    protected override void OnCreate(Bundle savedInstanceState)
+    {
+        base.OnCreate(savedInstanceState);
+        Platform.Init(this, savedInstanceState);
+
+        this.Window.AddFlags(WindowManagerFlags.Fullscreen);
     }
 }

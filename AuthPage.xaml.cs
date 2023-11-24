@@ -5,8 +5,10 @@ public partial class AuthPage : ContentPage
 	public AuthPage()
 	{
 		InitializeComponent();
+		string cacheName = DataSaver.ReadTextFile("cache.txt");
+		UsernameEntry.Text = cacheName;
 	}
-	public void OnLoginClicked(object sender, EventArgs e)
+	public async void OnLoginClicked(object sender, EventArgs e)
 	{
 		var s = UsernameEntry.Text;
 		if(s == null)
@@ -17,6 +19,7 @@ public partial class AuthPage : ContentPage
 		{
 			return;
 		}
+		DataSaver.WriteTextFile("cache.txt", s);
 		App.ChangePage(new NavigationPage(new ListPage(s)));
     }
 }
