@@ -40,6 +40,7 @@ public partial class MainPage : ContentPage
     }
 	~MainPage()
 	{
+		media.Stop();
         EventBus.updateComments -= UpdateComments;
         EventBus.quitRoom -= SomebodyQuit;
         EventBus.enterRoom -= SomebodyEnter;
@@ -49,6 +50,7 @@ public partial class MainPage : ContentPage
     }
     protected override bool OnBackButtonPressed()
     {
+		media.Stop();
         EventBus.updateComments -= UpdateComments;
         EventBus.quitRoom -= SomebodyQuit;
         EventBus.enterRoom -= SomebodyEnter;
