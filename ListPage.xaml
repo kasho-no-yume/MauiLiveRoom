@@ -14,7 +14,27 @@
             SeparatorColor="Black">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Detail="{Binding watching, StringFormat='当前观看人数:{0}'}" Text="{Binding path}" />
+                    <!--<TextCell Detail="{Binding watching, StringFormat='当前观看人数:{0}'}" Text="{Binding path}" />-->
+                    <ViewCell>
+                        <VerticalStackLayout>
+                            <Label Padding="5" FontSize="18">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}直播标题：{0}  直播路径：{1} ">
+                                        <Binding Path="title" TargetNullValue="" />
+                                        <Binding Path="path" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                            <Label FontSize="12">
+                                <Label.Text>
+                                    <MultiBinding StringFormat="{}直播介绍：{0}  当前观看：{1}人 ">
+                                        <Binding Path="desc" TargetNullValue="" />
+                                        <Binding Path="watching" />
+                                    </MultiBinding>
+                                </Label.Text>
+                            </Label>
+                        </VerticalStackLayout>
+                    </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

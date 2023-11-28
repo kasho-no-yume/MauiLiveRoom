@@ -40,15 +40,23 @@ public partial class ListPage : ContentPage
         liveInfos.Clear();
         foreach (LiveInfo info in lst)
         {
+            if(info.title.Length == 0)
+            {
+                info.title = null;
+            }
+            if(info.desc.Length == 0)
+            {
+                info.desc = null;
+            }
             liveInfos.Add(info);
         }
     }
 
     private async void ListView_ItemTapped(object sender, ItemTappedEventArgs e)
     {     
-        var s = (e.Item as LiveInfo).path;
-        Debug.WriteLine(s);
-        UserData.currentWatch = s;
+        var s = (e.Item as LiveInfo);
+        Debug.WriteLine(s.path);
+        UserData.currentWatch = s.path;
         //App.ChangePage(new MainPage(s));
         await Navigation.PushAsync(new MainPage(s));
     }

@@ -22,10 +22,10 @@ public partial class MainPage : ContentPage
             }			
 		} 
 	}
-	public MainPage(string path)
+	public MainPage(LiveInfo info)
 	{
 		InitializeComponent();
-		this.path = path;
+		this.path = info.path;
 		commentList.ItemsSource = comments;
 		EventBus.updateComments += UpdateComments;
 		EventBus.quitRoom += SomebodyQuit;
@@ -35,7 +35,7 @@ public partial class MainPage : ContentPage
 		media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
 		//web.Source = "http://mc.jsm.asia:8899/" + path;
         MsgSender.SendEnter(path);
-		page.Title = "当前正在观看的直播是：" + path;
+		page.Title = ("当前正在观看的直播是：" + (info.title == null ? path:info.title));
 
     }
 	~MainPage()
