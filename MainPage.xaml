@@ -30,24 +30,8 @@
             Orientation="Vertical">
             <Label x:Name="watching" />
             <Label x:Name="enterquit" />
-            <ScrollView VerticalOptions="FillAndExpand">
-                <custom:AutoScrollListView
-                    x:Name="commentList"
-                    HasUnevenRows="True"
-                    SeparatorColor="Black">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <ViewCell>
-                                <Label
-                                    Padding="10"
-                                    FontSize="{OnPlatform WinUI=18,
-                                                          Android=8}"
-                                    LineBreakMode="WordWrap"
-                                    Text="{Binding}" />
-                            </ViewCell>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </custom:AutoScrollListView>
+            <ScrollView x:Name="scroller" VerticalOptions="FillAndExpand">
+                <VerticalStackLayout x:Name="lst" />
             </ScrollView>
             <Editor
                 x:Name="messageEntry"

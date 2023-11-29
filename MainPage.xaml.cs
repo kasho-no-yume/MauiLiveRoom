@@ -26,7 +26,7 @@ public partial class MainPage : ContentPage
 	{
 		InitializeComponent();
 		this.path = info.path;
-		commentList.ItemsSource = comments;
+		//commentList.ItemsSource = comments;
 		EventBus.updateComments += UpdateComments;
 		EventBus.quitRoom += SomebodyQuit;
 		EventBus.enterRoom += SomebodyEnter;
@@ -61,7 +61,13 @@ public partial class MainPage : ContentPage
         return base.OnBackButtonPressed();
     }
 
-	private void UpdateNums(int nums)
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        DeviceDisplay.Current.KeepScreenOn = true;
+    }
+
+    private void UpdateNums(int nums)
 	{
 		watching.Text = "当前观看人数：" + nums;
 	}
@@ -75,20 +81,26 @@ public partial class MainPage : ContentPage
     }
     private async void UpdateComments(List<string> comments)
 	{
-		commentsList.Clear();
-		if(comments.Count == 0)
+		var size = 0;
+        if (DeviceInfo.Platform == DevicePlatform.WinUI)
+        {
+            size = 18;
+        }
+        else
+        {
+            size = 12;
+        }
+        lst.Children.Clear();
+		foreach (string comment in comments)
 		{
-			return;
+			var label = new Label();
+			label.Text = comment;
+			label.Padding = 3;
+			label.FontSize = size;
+			lst.Children.Add(label);
 		}
-		/*foreach (var comment in comments)
-		{
-            commentsList.Add(comment);
-		}*/
-		for(var i = comments.Count - 1; i >= 0; i--)
-		{
-			commentsList.Add(comments[i]);
-		}
-		//commentList.ScrollTo(commentsList[10], ScrollToPosition.Center, false);  
+		await Task.Delay(100);
+		await scroller.ScrollToAsync(0, lst.Height, true);
     }
 
 	public void SendMessage_Clicked(object sender,EventArgs args)

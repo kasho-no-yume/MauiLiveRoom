@@ -10,6 +10,7 @@
         <ListView
             x:Name="liveList"
             BackgroundColor="LightSkyBlue"
+            HasUnevenRows="True"
             ItemTapped="ListView_ItemTapped"
             SeparatorColor="Black">
             <ListView.ItemTemplate>
