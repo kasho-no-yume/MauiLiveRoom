@@ -13,6 +13,7 @@ namespace MauiApp1
     {
         private static ClientWebSocket _webSocket;
         public static string Url = "ws://mc.jsm.asia:8889";
+        public static string LiveUrl = "http://mc.jsm.asia:8899";
         private static CancellationTokenSource _cancellationTokenSource;
         private static int TimeOut = 2;
         public static WebSocketState connState { get { return _webSocket.State; } }

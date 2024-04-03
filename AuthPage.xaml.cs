@@ -10,8 +10,14 @@ public partial class AuthPage : ContentPage
 		InitializeComponent();
 		string cacheName = DataSaver.ReadTextFile("cache.txt");
 		string cacheUrl = DataSaver.ReadTextFile("url.txt");
+		string cacheLiveUrl = DataSaver.ReadTextFile("live.txt");
 		UsernameEntry.Text = cacheName;
 		URLEntry.Text = cacheUrl;
+		if(cacheLiveUrl == null || cacheLiveUrl.Trim().Length == 0)
+		{
+			cacheLiveUrl = WebSocketMgr.LiveUrl;
+		}
+		LiveURLEntry.Text = cacheLiveUrl;
 	}
 	public async void OnLoginClicked(object sender, EventArgs e)
 	{
@@ -29,6 +35,11 @@ public partial class AuthPage : ContentPage
 		{
 			WebSocketMgr.Url = URLEntry.Text;
 			DataSaver.WriteTextFile("url.txt",URLEntry.Text);
+		}
+		if(LiveURLEntry.Text != null && LiveURLEntry.Text.Trim().Length > 0)
+		{
+			WebSocketMgr.LiveUrl = LiveURLEntry.Text;
+			DataSaver.WriteTextFile("live.txt", LiveURLEntry.Text);
 		}
 		if (!MsgSender.SendAuth(s))
 		{

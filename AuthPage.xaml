@@ -9,7 +9,8 @@
             x:Name="PasswordEntry"
             IsPassword="True"
             Placeholder="暂时不用输入这个，我也不想删就这样了" />
-        <Entry x:Name="URLEntry" Placeholder="请输入服务端的地址" />
+        <Entry x:Name="URLEntry" Placeholder="请输入服务端的地址，以 ws:// 开头" />
+        <Entry x:Name="LiveURLEntry" Placeholder="请输入hls流媒体服务器的地址，以 http:// 开头" />
         <!--<HorizontalStackLayout>
             <Label Text="记住用户" />
             <CheckBox x:Name="rememberUsername" />

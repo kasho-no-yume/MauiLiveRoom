@@ -32,7 +32,7 @@ public partial class MainPage : ContentPage
 		EventBus.enterRoom += SomebodyEnter;
 		EventBus.updateNums += UpdateNums;
 		EventBus.disconnect += Disconnect;
-		media.Source = "http://mc.jsm.asia:8899/" + path + "/index.m3u8";
+		media.Source = WebSocketMgr.LiveUrl +"/"+ path + "/index.m3u8";
 		//web.Source = "http://mc.jsm.asia:8899/" + path;
         MsgSender.SendEnter(path);
 		page.Title = ("当前正在观看的直播是：" + (info.title == null ? path:info.title));
