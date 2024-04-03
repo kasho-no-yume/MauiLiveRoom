@@ -12,6 +12,7 @@ namespace MauiApp1
     static class WebSocketMgr
     {
         private static ClientWebSocket _webSocket;
+        public static string Url = "ws://mc.jsm.asia:8889";
         private static CancellationTokenSource _cancellationTokenSource;
         private static int TimeOut = 2;
         public static WebSocketState connState { get { return _webSocket.State; } }
@@ -39,21 +40,24 @@ namespace MauiApp1
                 _webSocket = new ClientWebSocket();
             }           
             _cancellationTokenSource = new CancellationTokenSource();
-            var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
-            Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(TimeOut));
-
-            Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;
-
-            if (completedTask == responseTask)
+            _cancellationTokenSource.CancelAfter(TimeSpan.FromSeconds(TimeOut));
+            if (!Uri.IsWellFormedUriString(Url, UriKind.Absolute))
             {
+                return false;
+            }
+            try
+            {
+                _webSocket.ConnectAsync(new Uri(Url), _cancellationTokenSource.Token).Wait();
                 ReceiveLoop();
                 ListenConnectionStatus();
-                Debug.WriteLine("连接成功！");               
+                Debug.WriteLine("连接成功！");
                 return true;
             }
-            else
+            catch (Exception ex)
             {
                 Debug.WriteLine("连接失败。");
+                _webSocket?.Dispose();
+                _webSocket = new ClientWebSocket();
                 return false;
             }
         }
@@ -112,7 +116,7 @@ namespace MauiApp1
             Debug.WriteLine("服务器断开");
             EventBus.disconnect();
             _webSocket = new ClientWebSocket();
-            var responseTask = _webSocket.ConnectAsync(new Uri("ws://mc.jsm.asia:8889"), CancellationToken.None);
+            var responseTask = _webSocket.ConnectAsync(new Uri(WebSocketMgr.Url), CancellationToken.None);
             Task timeoutTask = Task.Delay(TimeSpan.FromSeconds(30));
 
             Task completedTask = Task.WhenAny(responseTask, timeoutTask).Result;

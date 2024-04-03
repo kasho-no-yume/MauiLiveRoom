@@ -13,7 +13,7 @@ namespace MauiApp1
         {
 
         }
-        public static void Send(string content)
+        public static bool Send(string content)
         {
             if (WebSocketMgr.Connect())
             {
@@ -21,18 +21,20 @@ namespace MauiApp1
                 if (res == false)
                 {
                     App.ChangePage(new AuthPage());
-                    return;
+                    EventBus.disconnect();
+                    return false;
                 }
                 else
                 {
-
+                    return true;
                 }
             }
+            return false;
         }
 
-        public static void SendAuth(string username)
+        public static bool SendAuth(string username)
         {
-            Send("auth " + username);
+            return Send("auth " + username);
         }
         public static void SendRefresh()
         {

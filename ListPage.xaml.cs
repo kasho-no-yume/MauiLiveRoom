@@ -26,7 +26,7 @@ public partial class ListPage : ContentPage
         liveList.ItemsSource = Lives;
         EventBus.updateList += UpdateList;
         EventBus.disconnect += Disconnect;
-        MsgSender.SendAuth(auth);
+        MsgSender.SendRefresh();
         UserData.username = auth;
         page.Title = auth+"大佬好，看看今天有什么直播吧";
     }
